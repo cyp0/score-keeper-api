@@ -59,7 +59,6 @@ public class Score {
     }
 
     public List<Stroke> getStrokes() {
-        setScore();
         return strokes;
     }
 
@@ -68,6 +67,7 @@ public class Score {
     }
 
     public int getScore() {
+        setScore();
         return score;
     }
 

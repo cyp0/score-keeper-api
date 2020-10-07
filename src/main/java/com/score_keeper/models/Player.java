@@ -35,7 +35,7 @@ public class Player {
 
 
     public String getFirstName() {
-        return firstName;
+        return firstName + " " + lastName;
     }
 
     public void setFirstName(String firstName) {
