@@ -69,15 +69,15 @@ public class ScoreController {
             //SOLO SI EL STAKE RANKING YA EXISTE
             Optional<StageRanking> stageRankingOptional = rankingRepository.findByStageId(score.getStage().getId());
             if (stageRankingOptional.isPresent()) {
-                stageRankingOptional.get().getPlayerRanks().add(new PlayerRank(score.getPlayer().getFirstName(), score.getScore()));
+                stageRankingOptional.get().getPlayerRanks().add(new PlayerRank(score.getPlayer(), score.getScore()));
                 scoreService.calculateRankings(stageRankingOptional.get());
             } else {
                 //PARA CREAR NUEVO STAGE RANKING
                 System.out.println("Prueba");
                 List<PlayerRank> playerRankList = new ArrayList<>();
-                playerRankList.add(new PlayerRank(score.getPlayer().getFirstName(), score.getScore()));
+                playerRankList.add(new PlayerRank(score.getPlayer(), score.getScore()));
                 StageRanking stageRanking = new StageRanking(playerRankList);
-                stageRanking.setTournament(score.getStage().getTournament());
+//                stageRanking.setTournament(score.getStage().getTournament());
                 stageRanking.setStage(score.getStage());
                 rankingRepository.save(stageRanking);
 
@@ -149,12 +149,11 @@ public class ScoreController {
 //                rankingRepository.save(stageRanking);
                 Optional<StageRanking> stageRanking = rankingRepository.findByStageId(data.getStage().getId());
                 stageRanking.get().getPlayerRanks().forEach(x ->{
-                    if(x.getName().equals(player.getFirstName())){
+                    if(x.getPlayer().getId().equals(player.getId())){
                         x.setStrikes(data.getScore());
                         System.out.println("Hola");
                     }
                 });
-                System.out.println(data.getPlayer().getLastName());
                 scoreService.calculateRankings(stageRanking.get());
 
 

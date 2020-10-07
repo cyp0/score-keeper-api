@@ -36,7 +36,7 @@ public class SpringBootSecurityJwtMongodbApplication implements CommandLineRunne
 //        roleRepository.save(role2);
 //        roleRepository.save(role3);
 
-//		categoryRepository.save(new Category("Categoria Juniors", Gender.MALE, 7, 10));
+//		categoryRepository.save(new Category("Categoria Juvenil", Gender.FEMALE, 11, 18));
 //	tournamentRepository.save(new Tournament("Torneo Juniors 2020" , "Apertura 2020" , 4 , 18, 17, false));
 	}
 }
