@@ -6,10 +6,13 @@ import com.score_keeper.models.Tournament;
 import com.score_keeper.repository.CategoryRepository;
 import com.score_keeper.repository.RoleRepository;
 import com.score_keeper.repository.TournamentRepository;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+import java.util.ArrayList;
 
 @SpringBootApplication
 public class SpringBootSecurityJwtMongodbApplication implements CommandLineRunner {
@@ -37,6 +40,7 @@ public class SpringBootSecurityJwtMongodbApplication implements CommandLineRunne
 //        roleRepository.save(role3);
 
 //		categoryRepository.save(new Category("Categoria Juvenil", Gender.FEMALE, 11, 18));
-//	tournamentRepository.save(new Tournament("Torneo Juniors 2020" , "Apertura 2020" , 4 , 18, 17, false));
+//	tournamentRepository.save(new Tournament("Torneo Juniors 2020" , "Apertura 2020" , 4 , 18, 17));
+
 	}
 }

@@ -2,14 +2,8 @@ package com.score_keeper.controllers;
 
 
 import com.score_keeper.Entity.PlayerRank;
-import com.score_keeper.models.Player;
-import com.score_keeper.models.Score;
-import com.score_keeper.models.Stage;
-import com.score_keeper.models.StageRanking;
-import com.score_keeper.repository.PlayerRepository;
-import com.score_keeper.repository.ScoreRepository;
-import com.score_keeper.repository.StageRankingRepository;
-import com.score_keeper.repository.StageRepository;
+import com.score_keeper.models.*;
+import com.score_keeper.repository.*;
 import com.score_keeper.service.ScoreServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +25,8 @@ public class ScoreController {
     StageRankingRepository rankingRepository;
     @Autowired
     ScoreServiceImpl scoreService;
+    @Autowired
+    GlobalRankingRepository globalRankingRepository;
 
     @GetMapping(value = "")
     public Map<String, Object> getScores() {
@@ -52,15 +48,20 @@ public class ScoreController {
     public Map<String, Object> createClub(@Valid @RequestBody Score score) {
         HashMap<String, Object> response = new HashMap<>();
         try {
-            Optional<Score> scoreOptional = scoreRepository.findByPlayer_Id(score.getPlayer().getId());
+            Stage stage = stageRepository.findById(score.getStage().getId()).get();
+            if (stage.isBlocked() || stage.getTournament().isBlocked()) {
+                response.put("message", "Stage is blocked");
+                response.put("success", true);
+                return response;
+            }
+            Optional<Score> scoreOptional = scoreRepository.findByStageId_AndPlayerId(score.getStage().getId(), score.getPlayer().getId());
             if (scoreOptional.isPresent()) {
                 response.put("message", "Player already registered");
-                response.put("success", true);
+                response.put("success", false);
                 return response;
             }
 
             Player player = playerRepository.findById(score.getPlayer().getId()).get();
-            Stage stage = stageRepository.findById(score.getStage().getId()).get();
             score.setPlayer(player);
             score.setStage(stage);
             scoreRepository.save(score);
@@ -68,19 +69,34 @@ public class ScoreController {
             //Rankings
             //SOLO SI EL STAKE RANKING YA EXISTE
             Optional<StageRanking> stageRankingOptional = rankingRepository.findByStageId(score.getStage().getId());
+            Optional<GlobalRanking> globalRankingOptional = globalRankingRepository.findByTournamentId(score.getStage().getTournament().getId());
             if (stageRankingOptional.isPresent()) {
-                stageRankingOptional.get().getPlayerRanks().add(new PlayerRank(score.getPlayer(), score.getScore()));
-                scoreService.calculateRankings(stageRankingOptional.get());
+                PlayerRank playerRank = new PlayerRank(score.getPlayer(), score.getScore());
+                stageRankingOptional.get().getPlayerRanks().add(playerRank);
+
+//                globalRankingOptional.get().getRankList().add(new PlayerRank(score.getPlayer(), score.getScore()));
+                scoreService.calculateRankings(stageRankingOptional.get(), playerRank, globalRankingOptional.get());
             } else {
                 //PARA CREAR NUEVO STAGE RANKING
-                System.out.println("Prueba");
                 List<PlayerRank> playerRankList = new ArrayList<>();
-                playerRankList.add(new PlayerRank(score.getPlayer(), score.getScore()));
+                PlayerRank playerRank = new PlayerRank(score.getPlayer(), score.getScore());
+                playerRank.setPoints(10);
+                playerRankList.add(playerRank);
                 StageRanking stageRanking = new StageRanking(playerRankList);
-//                stageRanking.setTournament(score.getStage().getTournament());
+                stageRanking.setTournament(score.getStage().getTournament());
                 stageRanking.setStage(score.getStage());
                 rankingRepository.save(stageRanking);
+//CREO QUE HABRA PROBLEMAS CON ESTO SI EL STAGE RANKING ES NUEVO, 8/10/10 7:06pm
+                scoreService.calculateGlobalRankings(stageRanking, globalRankingOptional.get(), playerRank);
 
+                //Global Ranking
+//                if (!globalRankingOptional.isPresent()) {
+//                    List<PlayerRank> globalRank = new ArrayList<>();
+//                    GlobalRanking globalRanking = new GlobalRanking(globalRank);
+//                    globalRanking.setTournament(score.getStage().getTournament());
+//
+//                    globalRankingRepository.save(globalRanking);
+//                }
             }
             response.put("scores", score);
             response.put("message", "Successful");
@@ -129,6 +145,12 @@ public class ScoreController {
         HashMap<String, Object> response = new HashMap<String, Object>();
 
         try {
+            Stage stage = stageRepository.findById(data.getStage().getId()).get();
+            if(stage.isBlocked() || stage.getTournament().isBlocked()){
+                response.put("message", "Stage is blocked");
+                response.put("success", true);
+                return response;
+            }
             if (data.getStrokes().size() != scoreRepository.findById(id).get().getStrokes().size()) {
                 response.put("message", "No se puede introducir mas hoyos de los que ya existen");
                 response.put("success", false);
@@ -137,7 +159,6 @@ public class ScoreController {
 
                 List<Score> scoreList = scoreRepository.getAllByStage_Id(id);
                 Player player = playerRepository.findById(data.getPlayer().getId()).get();
-                Stage stage = stageRepository.findById(data.getStage().getId()).get();
                 data.setPlayer(player);
                 data.setStage(stage);
                 data.setId(id);
@@ -148,13 +169,14 @@ public class ScoreController {
 //                stageRanking.setStage(data.getStage());
 //                rankingRepository.save(stageRanking);
                 Optional<StageRanking> stageRanking = rankingRepository.findByStageId(data.getStage().getId());
-                stageRanking.get().getPlayerRanks().forEach(x ->{
-                    if(x.getPlayer().getId().equals(player.getId())){
+                stageRanking.get().getPlayerRanks().forEach(x -> {
+                    if (x.getPlayer().getId().equals(player.getId())) {
                         x.setStrikes(data.getScore());
                         System.out.println("Hola");
                     }
                 });
-                scoreService.calculateRankings(stageRanking.get());
+                //AGREGARLE EL GLOBAL RANKING REPOSITORY O VER OTRA SOLUCION 8/10/2020
+//                scoreService.calculateRankings(stageRanking.get());
 
 
                 response.put("message", "Successful update");
@@ -167,5 +189,26 @@ public class ScoreController {
             return response;
         }
 
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public Map<String, Object> deleteScore(@PathVariable("id") String id) {
+        HashMap<String, Object> response = new HashMap<String, Object>();
+        try {
+            Optional<Score> scoreOptional = scoreRepository.findById(id);
+            if (scoreOptional.isPresent()) {
+                stageRepository.deleteById(id);
+                response.put("message", "Score deleted");
+                response.put("success", true);
+            } else {
+                response.put("message", "Score not found with id " + id);
+                response.put("success", false);
+            }
+            return response;
+        } catch (Exception e) {
+            response.put("message", "" + e.getMessage());
+            response.put("success", false);
+            return response;
+        }
     }
 }

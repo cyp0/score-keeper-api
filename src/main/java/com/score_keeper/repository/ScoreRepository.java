@@ -11,5 +11,6 @@ import java.util.Set;
 
 public interface ScoreRepository extends MongoRepository<Score, String> {
     List<Score> getAllByStage_Id(String id);
+    Optional<Score> findByStageId_AndPlayerId(String stageID, String playerID);
     Optional<Score> findByPlayer_Id(String name);
 }

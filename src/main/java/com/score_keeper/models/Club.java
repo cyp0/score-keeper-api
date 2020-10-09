@@ -13,13 +13,16 @@ public class Club  {
 
     public Club() {
     }
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Club(String name) {
         this.name = name;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getName() {

@@ -12,8 +12,8 @@ public class StageRanking {
     @Id
     private String id;
 
-//    @DBRef
-//    private Tournament tournament;
+    @DBRef
+    private Tournament tournament;
 
     @DBRef
     private Stage stage;
@@ -39,9 +39,9 @@ public class StageRanking {
 //        return tournament;
 //    }
 //
-//    public void setTournament(Tournament tournament) {
-//        this.tournament = tournament;
-//    }
+    public void setTournament(Tournament tournament) {
+        this.tournament = tournament;
+    }
 
     public Stage getStage() {
         return stage;

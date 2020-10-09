@@ -3,6 +3,8 @@ package com.score_keeper.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.Min;
+
 
 @Document(collection = "tournament")
 public class Tournament {
@@ -12,6 +14,7 @@ public class Tournament {
     private String name;
     private String season;
     private int stages;
+    @Min(9)
     private int holes;
     private int max_strokes;
     private boolean blocked;
@@ -19,22 +22,22 @@ public class Tournament {
     public Tournament() {
     }
 
-    public Tournament(String name, String season, int stages, int holes, int max_strokes, boolean blocked) {
+    public Tournament(String name, String season, int stages, int holes, int max_strokes) {
         this.name = name;
         this.season = season;
         this.stages = stages;
         this.holes = holes;
         this.max_strokes = max_strokes;
-        this.blocked = blocked;
+
     }
 
     public String getId() {
         return id;
     }
 
-//    public void setId(String id) {
-//        this.id = id;
-//    }
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getName() {
         return name;

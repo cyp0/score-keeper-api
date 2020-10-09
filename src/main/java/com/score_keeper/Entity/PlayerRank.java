@@ -7,9 +7,8 @@ public class PlayerRank implements Comparable<PlayerRank>{
 
 
     private Player player;
-
     private int strikes;
-
+    private int points;
     public PlayerRank(Player player, int strikes) {
         this.player = player;
         this.strikes = strikes;
@@ -29,6 +28,14 @@ public class PlayerRank implements Comparable<PlayerRank>{
 
     public void setStrikes(int strikes) {
         this.strikes = strikes;
+    }
+
+    public int getPoints() {
+        return points;
+    }
+
+    public void setPoints(int points) {
+        this.points = points;
     }
 
     @Override

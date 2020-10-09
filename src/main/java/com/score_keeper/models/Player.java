@@ -5,14 +5,17 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+
 
 @Document(collection = "player")
 public class Player {
     @Id
     private String id;
-
+    @NotNull
     private String firstName;
+    @NotNull
     private String lastName;
     private LocalDate birth_day;
 
@@ -32,10 +35,12 @@ public class Player {
         return id;
     }
 
-
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getFirstName() {
-        return firstName + " " + lastName;
+        return firstName;
     }
 
     public void setFirstName(String firstName) {
@@ -73,6 +78,5 @@ public class Player {
     public void setCategory(Category category) {
         this.category = category;
     }
-
 
 }

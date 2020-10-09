@@ -21,17 +21,20 @@ public class Stage {
     public Stage() {
     }
 
-    public Stage(Tournament tournament, Club club, int stageNumber, boolean blocked) {
+    public Stage(Tournament tournament, Club club, int stageNumber) {
         this.tournament = tournament;
         this.club = club;
         this.stageNumber = stageNumber;
-        this.blocked = blocked;
+
     }
 
     public String getId() {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public Tournament getTournament() {
         return tournament;
