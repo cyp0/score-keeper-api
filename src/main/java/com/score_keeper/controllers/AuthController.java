@@ -52,7 +52,7 @@ public class AuthController {
 	@Autowired
     JwtUtils jwtUtils;
 
-	@PostMapping("/signin")
+	@PostMapping("/login")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest , BindingResult bindingResult) {
 		if(bindingResult.hasErrors()){
 			return ResponseEntity
