@@ -1,8 +1,6 @@
 package com.score_keeper.controllers;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import javax.validation.Valid;
@@ -22,20 +20,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.score_keeper.repository.UserRepository;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/auth")
+@RequestMapping("")
 public class AuthController {
 	@Autowired
 	AuthenticationManager authenticationManager;
@@ -52,7 +47,7 @@ public class AuthController {
 	@Autowired
     JwtUtils jwtUtils;
 
-	@PostMapping("/signin")
+	@PostMapping("/login")
 	public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest , BindingResult bindingResult) {
 		if(bindingResult.hasErrors()){
 			return ResponseEntity
@@ -77,6 +72,18 @@ public class AuthController {
 				userDetails.getEmail(),
 				roles));
 	}
+	@GetMapping("/login")
+	public Map<String, Object> getLogin() {
+		HashMap<String, Object> response = new HashMap<>();
+		try {
+			response.put("Message", "Yeah");
+			return response;
+		} catch (Exception e) {
+			response.put("Message", "YeahNO");
+			return response;
+		}
+	}
+
 
 	@PostMapping("/signup")
 	public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
@@ -123,4 +130,6 @@ public class AuthController {
 
 		return ResponseEntity.ok(new MessageResponse("User registered Successfully!"));
 	}
+
+
 }
