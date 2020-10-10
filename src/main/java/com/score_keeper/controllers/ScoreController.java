@@ -1,7 +1,7 @@
 package com.score_keeper.controllers;
 
 
-import com.score_keeper.Entity.PlayerRank;
+import com.score_keeper.entity.PlayerRank;
 import com.score_keeper.models.*;
 import com.score_keeper.repository.*;
 import com.score_keeper.service.ScoreServiceImpl;
@@ -32,7 +32,7 @@ public class ScoreController {
     public Map<String, Object> getScores() {
         HashMap<String, Object> response = new HashMap<>();
         try {
-            response.put("scores", scoreRepository.findAll());
+            response.put("data", scoreRepository.findAll());
             response.put("message", "Successful");
             response.put("success", true);
             return response;
@@ -73,8 +73,6 @@ public class ScoreController {
             if (stageRankingOptional.isPresent()) {
                 PlayerRank playerRank = new PlayerRank(score.getPlayer(), score.getScore());
                 stageRankingOptional.get().getPlayerRanks().add(playerRank);
-
-//                globalRankingOptional.get().getRankList().add(new PlayerRank(score.getPlayer(), score.getScore()));
                 scoreService.calculateRankings(stageRankingOptional.get(), playerRank, globalRankingOptional.get());
             } else {
                 //PARA CREAR NUEVO STAGE RANKING
@@ -86,17 +84,9 @@ public class ScoreController {
                 stageRanking.setTournament(score.getStage().getTournament());
                 stageRanking.setStage(score.getStage());
                 rankingRepository.save(stageRanking);
-//CREO QUE HABRA PROBLEMAS CON ESTO SI EL STAGE RANKING ES NUEVO, 8/10/10 7:06pm
-                scoreService.calculateGlobalRankings(stageRanking, globalRankingOptional.get(), playerRank);
 
-                //Global Ranking
-//                if (!globalRankingOptional.isPresent()) {
-//                    List<PlayerRank> globalRank = new ArrayList<>();
-//                    GlobalRanking globalRanking = new GlobalRanking(globalRank);
-//                    globalRanking.setTournament(score.getStage().getTournament());
-//
-//                    globalRankingRepository.save(globalRanking);
-//                }
+                scoreService.calculateGlobalRankings(globalRankingOptional.get());
+
             }
             response.put("scores", score);
             response.put("message", "Successful");
@@ -110,14 +100,14 @@ public class ScoreController {
 
     }
 
-    @GetMapping(value = "/{id}")
-    public Map<String, Object> data(@PathVariable("id") String id) {
+    @GetMapping(value = "/{stage}/{player}")
+    public Map<String, Object> data(@PathVariable("stage") String stageID , @PathVariable("player") String playerID) {
 
         HashMap<String, Object> response = new HashMap<String, Object>();
 
         try {
 
-            Optional<Score> score = scoreRepository.findById(id);
+            Optional<Score> score = scoreRepository.findByStageId_AndPlayerId(stageID, playerID);
 
             if (score.isPresent()) {
                 response.put("message", "Successful load");
@@ -139,14 +129,18 @@ public class ScoreController {
     }
 
     @PutMapping("/{id}")
-    public Map<String, Object> update(@PathVariable("id") String id,
-                                      @RequestBody Score data) {
+    public Map<String, Object> update(@PathVariable("id") String id, @RequestBody Score data) {
 
         HashMap<String, Object> response = new HashMap<String, Object>();
 
         try {
+            if(scoreRepository.findById(id).isEmpty()){
+                response.put("message", "Score not found with id " + id);
+                response.put("success", false);
+                return response;
+            }
             Stage stage = stageRepository.findById(data.getStage().getId()).get();
-            if(stage.isBlocked() || stage.getTournament().isBlocked()){
+            if (stage.isBlocked() || stage.getTournament().isBlocked()) {
                 response.put("message", "Stage is blocked");
                 response.put("success", true);
                 return response;
@@ -196,14 +190,20 @@ public class ScoreController {
         HashMap<String, Object> response = new HashMap<String, Object>();
         try {
             Optional<Score> scoreOptional = scoreRepository.findById(id);
-            if (scoreOptional.isPresent()) {
-                stageRepository.deleteById(id);
-                response.put("message", "Score deleted");
-                response.put("success", true);
-            } else {
+
+            if (!scoreOptional.isPresent()) {
                 response.put("message", "Score not found with id " + id);
                 response.put("success", false);
+                return response;
             }
+            Stage stage = scoreOptional.get().getStage();
+            if (stage.isBlocked() || stage.getTournament().isBlocked()) {
+                response.put("message", "Stage is blocked");
+            } else {
+                stageRepository.deleteById(id);
+                response.put("message", "Score deleted");
+            }
+            response.put("success", true);
             return response;
         } catch (Exception e) {
             response.put("message", "" + e.getMessage());

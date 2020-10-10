@@ -1,10 +1,11 @@
 package com.score_keeper.models;
 
-import com.score_keeper.Entity.PlayerRank;
+import com.score_keeper.entity.PlayerRank;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Document(collection = "stage_ranking")
@@ -13,12 +14,14 @@ public class StageRanking {
     private String id;
 
     @DBRef
+    @NotNull(message = "Tournament id must no be empty")
     private Tournament tournament;
 
     @DBRef
+    @NotNull(message = "Stage id must no be empty")
     private Stage stage;
 
-   private List<PlayerRank> playerRanks;
+    private List<PlayerRank> playerRanks;
 
    public StageRanking() {
     }

@@ -5,6 +5,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.awt.*;
 import java.util.Iterator;
@@ -16,13 +17,15 @@ public class Score {
     private String id;
 
     @DBRef
+    @NotNull(message = "Player id must no be empty")
     private Player player;
 
     @DBRef
+    @NotNull(message = "Stage id must no be empty")
     private Stage stage;
 
-    @NotEmpty
-    @Size(max = 18)
+    @NotNull
+    @Size(max = 9)
     private List<Stroke> strokes;
 
     private int score;

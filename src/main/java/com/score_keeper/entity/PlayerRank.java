@@ -1,7 +1,6 @@
-package com.score_keeper.Entity;
+package com.score_keeper.entity;
 
 import com.score_keeper.models.Player;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 
 public class PlayerRank implements Comparable<PlayerRank>{
 

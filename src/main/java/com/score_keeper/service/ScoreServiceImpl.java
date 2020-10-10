@@ -1,6 +1,6 @@
 package com.score_keeper.service;
 
-import com.score_keeper.Entity.PlayerRank;
+import com.score_keeper.entity.PlayerRank;
 import com.score_keeper.models.GlobalRanking;
 import com.score_keeper.models.Score;
 import com.score_keeper.models.StageRanking;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 //@Transactional
@@ -65,78 +66,43 @@ public class ScoreServiceImpl implements ScoreService {
 //        }
 
 
-        calculateGlobalRankings(stageRanking,globalRanking, playerRank);
+        calculateGlobalRankings(globalRanking);
     }
 
     @Override
-    public void calculateGlobalRankings(StageRanking stageRanking,GlobalRanking globalRanking, PlayerRank playerRank) {
+    public void calculateGlobalRankings(GlobalRanking globalRanking) {
+
+
         List<StageRanking> stageRankings = rankingRepository.findAllByTournamentId(globalRanking.getTournament().getId());
-        stageRankings.remove(stageRanking);
+        List<List<PlayerRank>> rankPlayers = new ArrayList<>();
+        List<PlayerRank> globalRankings = new ArrayList<>();
 
+        globalRanking.setRankList(globalRankings);
+        globalRankings.addAll(stageRankings.get(0).getPlayerRanks());
 
-        boolean detected = false;
-        int difference = 0;
-       //AQUI ACTUALIZO LA LISTA DE PLAYER RANK DE GLOBAL CON LOS NUEVOS PUNTOS DESPUES DE UN CAMBIO
-        stageRanking.getPlayerRanks().forEach(stage -> {
-            globalRanking.getRankList().forEach(global -> {
-                if(stage.getPlayer().getId().equals(global.getPlayer().getId())){
-                    int points = 0;
-                    for(int i =0; i< stageRankings.size(); i++){
-                        for (PlayerRank player: stageRankings.get(i).getPlayerRanks()) {
-                            if(playerRank.getPlayer().getId().equals(player.getPlayer().getId())){
-                                 points = player.getPoints();
-                            }
+        if(stageRankings.size() > 1) {
+            stageRankings.remove(0);
+            stageRankings.forEach(x -> rankPlayers.add(x.getPlayerRanks()));
+
+            for (int i = 0; i < stageRankings.size(); i++) {
+                rankPlayers.get(i).forEach(stage -> {
+                    AtomicBoolean isFound = new AtomicBoolean(false);
+                    globalRankings.forEach(global -> {
+                        if (global.getPlayer().getId().equals(stage.getPlayer().getId())) {
+                            global.setPoints(global.getPoints() + stage.getPoints());
+                            isFound.set(true);
                         }
-                        if(stageRankings.size() == 1) {
-                            global.setPoints((stage.getPoints() - global.getPoints()) + global.getPoints());
-                        }else {
-                            global.setPoints((stage.getPoints() - global.getPoints()) + global.getPoints() + points);
-
-                        }
+                    });
+                    if (!isFound.get()) {
+                        globalRankings.add(stage);
                     }
-//                    for (PlayerRank player: stageRankings.get(i).getPlayerRanks()) {
-//
-//                    }
-
-                }
-            });
-        });
-
-        for (PlayerRank player : globalRanking.getRankList()) {
-            if (playerRank.getPlayer().getId().equals(player.getPlayer().getId())) {
-                int index = globalRanking.getRankList().indexOf(playerRank);
-                detected = true;
-                break;
+                });
             }
         }
-        globalRanking.getRankList().forEach(x ->
-        {
-            System.out.println("Puntos de " + x.getPlayer().getFirstName() + " " + x.getPoints());
-            System.out.println("Size of list:" + globalRanking.getRankList().size());
-        });
-        System.out.println("Salto");
-//        globalRanking.getRankList().forEach(x -> x.setPoints(0));
-        if (detected) {
-            globalRanking.getRankList().forEach(x -> {
-                if (playerRank.getPlayer().getId().equals(x.getPlayer().getId())) {
-                    x.setPoints(x.getPoints() + playerRank.getPoints());
-                }
-            });
-        } else {
-            globalRanking.getRankList().add(playerRank);
-        }
-
-        globalRanking.getRankList().forEach(x ->
-        {
-            System.out.println("Puntos de " + x.getPlayer().getFirstName()+ " " + x.getPoints());
-            System.out.println("Size of list:" + globalRanking.getRankList().size());
-        });
-        System.out.println("************************************************");
-        System.out.println();
-        System.out.println("Nuevo");
-
         globalRanking.setId(globalRanking.getId());
+        globalRanking.setRankList(globalRankings);
         globalRankingRepository.save(globalRanking);
+
     }
 
 

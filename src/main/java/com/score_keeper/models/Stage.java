@@ -4,26 +4,30 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.Max;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 @Document(collection = "stage")
 public class Stage {
     @Id
     private String id;
 
     @DBRef
+    @NotNull(message = "Tournament id must no be empty")
     private Tournament tournament;
 
-    @DBRef
-    private Club club;
 
+    @NotNull(message = "Stage number must not be empty")
     private int stageNumber;
+
     private boolean blocked;
 
     public Stage() {
     }
 
-    public Stage(Tournament tournament, Club club, int stageNumber) {
+    public Stage(Tournament tournament, int stageNumber) {
         this.tournament = tournament;
-        this.club = club;
         this.stageNumber = stageNumber;
 
     }
@@ -44,13 +48,6 @@ public class Stage {
         this.tournament = tournament;
     }
 
-    public Club getClub() {
-        return club;
-    }
-
-    public void setClub(Club club) {
-        this.club = club;
-    }
 
     public int getStageNumber() {
         return stageNumber;

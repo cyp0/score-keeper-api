@@ -11,6 +11,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.Years;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -48,6 +49,7 @@ public class PlayerController {
 
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = {"/", ""})
     public Map<String, Object> postPlayer(@Valid @RequestBody Player player) {
         HashMap<String, Object> response = new HashMap<>();
@@ -103,6 +105,29 @@ public class PlayerController {
         }
     }
 
+//    @GetMapping(value = "/{firstName}/{lastName}")
+//    public Map<String, Object> getPlayerByName(@PathVariable("firstName") String firstName, @PathVariable("lastName") String lastName) {
+//        HashMap<String, Object> response = new HashMap<String, Object>();
+//        try {
+//            Optional<Player> player = playerRepository.findByFirstNameAndLastName(firstName, lastName);
+//            if (player.isPresent()) {
+//                response.put("data", player.get());
+//                response.put("message", "Player found");
+//                response.put("success", true);
+//            } else {
+//                response.put("message", firstName + " " + lastName + " not found ");
+//                response.put("success", false);
+//            }
+//            return response;
+//        } catch (Exception e) {
+//            response.put("message", "" + e.getMessage());
+//            response.put("success", false);
+//            return response;
+//        }
+//    }
+
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}")
     public Map<String, Object> updatePlayer(@PathVariable("id") String id, @Valid @RequestBody Player player) {
         HashMap<String, Object> response = new HashMap<String, Object>();
@@ -136,26 +161,27 @@ public class PlayerController {
         }
     }
 
-    @DeleteMapping(value = "/{id}")
-    public Map<String, Object> deletePlayer(@PathVariable("id") String id) {
-        HashMap<String, Object> response = new HashMap<String, Object>();
-        try {
-            Optional<Player> player = playerRepository.findById(id);
-            if (player.isPresent()) {
-                playerRepository.deleteById(id);
-                response.put("message", "Player deleted");
-                response.put("success", true);
-            } else {
-                response.put("message", "Player not found with id " + id);
-                response.put("success", false);
-            }
-            return response;
-        } catch (Exception e) {
-            response.put("message", "" + e.getMessage());
-            response.put("success", false);
-            return response;
-        }
-    }
+    //No se ocupa
+//    @DeleteMapping(value = "/{id}")
+//    public Map<String, Object> deletePlayer(@PathVariable("id") String id) {
+//        HashMap<String, Object> response = new HashMap<String, Object>();
+//        try {
+//            Optional<Player> player = playerRepository.findById(id);
+//            if (player.isPresent()) {
+//                playerRepository.deleteById(id);
+//                response.put("message", "Player deleted");
+//                response.put("success", true);
+//            } else {
+//                response.put("message", "Player not found with id " + id);
+//                response.put("success", false);
+//            }
+//            return response;
+//        } catch (Exception e) {
+//            response.put("message", "" + e.getMessage());
+//            response.put("success", false);
+//            return response;
+//        }
+//    }
 
     @GetMapping(value = "/{club}")
     public Map<String, Object> getPlayerByClub(@PathVariable("club") String club) {

@@ -1,26 +1,25 @@
 package com.score_keeper.controllers;
 
-import com.score_keeper.Entity.PlayerRank;
+import com.score_keeper.entity.PlayerRank;
 import com.score_keeper.models.*;
 import com.score_keeper.repository.GlobalRankingRepository;
+import com.score_keeper.repository.StageRepository;
 import com.score_keeper.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
-@RequestMapping(value = "api/tournament")
+@RequestMapping(value = "api/tournaments")
 public class TournamentController {
     @Autowired
     TournamentRepository tournamentRepository;
     @Autowired
     GlobalRankingRepository globalRankingRepository;
-
+    @Autowired
+    StageRepository stageRepository;
     @GetMapping(value = {"/", ""})
     public Map<String, Object> getTournaments() {
         HashMap<String, Object> response = new HashMap<>();
@@ -53,6 +52,11 @@ public class TournamentController {
                 GlobalRanking globalRanking = new GlobalRanking(playerRanks);
                 globalRanking.setTournament(tournament);
                 globalRankingRepository.save(globalRanking);
+                //Create 5 stages
+                for(int i = 1; i <= tournament.getStages(); i++){
+                    stageRepository.save(new Stage(tournament, i));
+                }
+
                 response.put("tournament", tournament);
                 response.put("message", "Successful");
                 response.put("success", true);
@@ -77,6 +81,28 @@ public class TournamentController {
                 response.put("success", true);
             } else {
                 response.put("message", "Tournament not found with id " + id);
+                response.put("success", false);
+            }
+            return response;
+        } catch (Exception e) {
+            response.put("message", "" + e.getMessage());
+            response.put("success", false);
+            return response;
+        }
+    }
+
+    //GetStages
+    @GetMapping(value = "/{tournamentID}/stages")
+    public Map<String, Object> getStagesByTournamentId(@PathVariable("tournamentID") String id) {
+        HashMap<String, Object> response = new HashMap<String, Object>();
+        try {
+            List<Stage> stages = stageRepository.findAllByTournamentId(id);
+            if (!stages.isEmpty()) {
+                response.put("data", stages);
+                response.put("message", "Stages found");
+                response.put("success", true);
+            } else {
+                response.put("message", "Stages not found with  tournament id " + id);
                 response.put("success", false);
             }
             return response;

@@ -3,16 +3,23 @@ package com.score_keeper.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotEmpty;
+
 @Document(collection = "club")
 public class Club  {
     @Id
     private String id;
-
+    @NotEmpty(message = "Name must not be empty")
     private String name;
 
 
     public Club() {
     }
+
+    public Club(String name) {
+        this.name = name;
+    }
+
     public String getId() {
         return id;
     }
@@ -21,9 +28,7 @@ public class Club  {
         this.id = id;
     }
 
-    public Club(String name) {
-        this.name = name;
-    }
+
 
     public String getName() {
         return name;

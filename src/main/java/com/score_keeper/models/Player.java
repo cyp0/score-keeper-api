@@ -5,7 +5,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
 
@@ -13,16 +15,21 @@ import java.time.LocalDate;
 public class Player {
     @Id
     private String id;
-    @NotNull
+    @NotEmpty(message = "First Name must not be empty")
     private String firstName;
-    @NotNull
+    @NotEmpty(message = "Last Name must not be empty")
     private String lastName;
+
+    @NotNull(message = "Birth day must not be empty")
     private LocalDate birth_day;
 
+
     @DBRef
+    @NotNull(message = "Club id must not be empty")
     private Club club;
 
     @DBRef
+    @NotNull(message = "Category id must not be empty")
     private Category category;
 
     public Player(String firstName, String lastName, LocalDate birth_day) {

@@ -3,15 +3,22 @@ package com.score_keeper.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 @Document(collection = "category")
 public class Category {
 
     @Id
     private String id;
 
+    @NotEmpty(message = "Description may not be empty")
     private String description;
+    @NotNull(message = "Gender may not be empty")
     private Gender gender;
+    @NotNull(message = "Age may not be empty")
     private int min_age;
+    @NotNull(message = "Age may not be empty")
     private int max_age;
 
     public Category() {

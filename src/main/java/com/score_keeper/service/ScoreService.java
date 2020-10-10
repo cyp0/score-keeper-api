@@ -1,6 +1,6 @@
 package com.score_keeper.service;
 
-import com.score_keeper.Entity.PlayerRank;
+import com.score_keeper.entity.PlayerRank;
 import com.score_keeper.models.GlobalRanking;
 import com.score_keeper.models.Score;
 import com.score_keeper.models.StageRanking;
@@ -14,5 +14,5 @@ public interface ScoreService {
     @NotNull List<Score> getAllScoreByStageID(String id);
 //    @NotNull List<PlayerRank> calculateRankings(List<Score> scoreList);
         public void calculateRankings(StageRanking stageRanking,PlayerRank playerRank ,GlobalRanking globalRanking);
-        public void calculateGlobalRankings(StageRanking stageRanking,GlobalRanking globalRanking, PlayerRank playerRank);
+        public void calculateGlobalRankings(GlobalRanking globalRanking);
 }

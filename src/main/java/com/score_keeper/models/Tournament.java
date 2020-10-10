@@ -3,32 +3,35 @@ package com.score_keeper.models;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 
 
 @Document(collection = "tournament")
 public class Tournament {
     @Id
     private String id;
-
+    @NotEmpty(message = "Name must not be empty")
     private String name;
+    @NotEmpty(message = "Season must not be empty")
     private String season;
+    @NotNull(message = "Stage must not be empty")
     private int stages;
-    @Min(9)
+    @Max(value = 9, message = "Maximum number of holes is 9")
+    @NotNull(message = "Holes must not be empty")
     private int holes;
-    private int max_strokes;
     private boolean blocked;
 
     public Tournament() {
     }
 
-    public Tournament(String name, String season, int stages, int holes, int max_strokes) {
+    public Tournament(String name, String season, int stages, int holes) {
         this.name = name;
         this.season = season;
         this.stages = stages;
         this.holes = holes;
-        this.max_strokes = max_strokes;
-
     }
 
     public String getId() {
@@ -72,12 +75,12 @@ public class Tournament {
     }
 
     public int getMax_strokes() {
-        return max_strokes;
+        return 9;
     }
 
-    public void setMax_strokes(int max_strokes) {
-        this.max_strokes = max_strokes;
-    }
+//    public void setMax_strokes(int max_strokes) {
+//        this.max_strokes = max_strokes;
+//    }
 
     public boolean isBlocked() {
         return blocked;
