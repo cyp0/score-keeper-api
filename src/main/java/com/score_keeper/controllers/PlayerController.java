@@ -49,7 +49,7 @@ public class PlayerController {
 
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = {"/", ""})
     public Map<String, Object> postPlayer(@Valid @RequestBody Player player) {
         HashMap<String, Object> response = new HashMap<>();
@@ -127,7 +127,7 @@ public class PlayerController {
 //    }
 
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}")
     public Map<String, Object> updatePlayer(@PathVariable("id") String id, @Valid @RequestBody Player player) {
         HashMap<String, Object> response = new HashMap<String, Object>();
@@ -183,27 +183,27 @@ public class PlayerController {
 //        }
 //    }
 
-    @GetMapping(value = "/{club}")
-    public Map<String, Object> getPlayerByClub(@PathVariable("club") String club) {
-        HashMap<String, Object> response = new HashMap<String, Object>();
-
-        try {
-            List<Player> validateClub = playerRepository.findByClub_Name(club);
-            if (!validateClub.isEmpty()) {
-                response.put("message", "Successfully loaded");
-                response.put("data", validateClub);
-                response.put("success", true);
-            } else {
-                response.put("message", "Club not found");
-                response.put("data", null);
-                response.put("success", false);
-            }
-            return response;
-        } catch (Exception e) {
-            response.put("message", "" + e.getMessage());
-            response.put("success", false);
-            return response;
-        }
-    }
+//    @GetMapping(value = "/{club}")
+//    public Map<String, Object> getPlayerByClub(@PathVariable("club") String club) {
+//        HashMap<String, Object> response = new HashMap<String, Object>();
+//
+//        try {
+//            List<Player> validateClub = playerRepository.findByClub_Name(club);
+//            if (!validateClub.isEmpty()) {
+//                response.put("message", "Successfully loaded");
+//                response.put("data", validateClub);
+//                response.put("success", true);
+//            } else {
+//                response.put("message", "Club not found");
+//                response.put("data", null);
+//                response.put("success", false);
+//            }
+//            return response;
+//        } catch (Exception e) {
+//            response.put("message", "" + e.getMessage());
+//            response.put("success", false);
+//            return response;
+//        }
+//    }
 
 }

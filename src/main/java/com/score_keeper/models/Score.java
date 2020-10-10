@@ -25,7 +25,7 @@ public class Score {
     private Stage stage;
 
     @NotNull
-    @Size(max = 9)
+    @Size(min = 9,max = 9)
     private List<Stroke> strokes;
 
     private int score;

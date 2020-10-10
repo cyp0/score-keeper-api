@@ -10,9 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @RestController
-@RequestMapping(value = "api/score")
+@RequestMapping(value = "api/scores")
 public class ScoreController {
 
     @Autowired
@@ -28,7 +29,7 @@ public class ScoreController {
     @Autowired
     GlobalRankingRepository globalRankingRepository;
 
-    @GetMapping(value = "")
+    @GetMapping(value = {"/", ""})
     public Map<String, Object> getScores() {
         HashMap<String, Object> response = new HashMap<>();
         try {
@@ -61,6 +62,17 @@ public class ScoreController {
                 return response;
             }
 
+            AtomicBoolean surpassLimit = new AtomicBoolean(false);
+            score.getStrokes().forEach(x -> {
+                if(x.getStroke() > 10 || 0 >= x.getStroke()){
+                    surpassLimit.set(true);
+                }
+            });
+            if(surpassLimit.get()){
+                response.put("message", "Stroke must be between 1 and 9");
+                response.put("success", false);
+                return response;
+            }
             Player player = playerRepository.findById(score.getPlayer().getId()).get();
             score.setPlayer(player);
             score.setStage(stage);
@@ -88,7 +100,7 @@ public class ScoreController {
                 scoreService.calculateGlobalRankings(globalRankingOptional.get());
 
             }
-            response.put("scores", score);
+            response.put("data", score);
             response.put("message", "Successful");
             response.put("success", true);
             return response;
@@ -100,7 +112,7 @@ public class ScoreController {
 
     }
 
-    @GetMapping(value = "/{stage}/{player}")
+    @GetMapping(value = "/stage/{stage}/player/{player}")
     public Map<String, Object> data(@PathVariable("stage") String stageID , @PathVariable("player") String playerID) {
 
         HashMap<String, Object> response = new HashMap<String, Object>();

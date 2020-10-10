@@ -14,7 +14,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "api/rankings")
+@RequestMapping(value = "api/stage-rankings")
 public class StageRankingController {
     @Autowired
     StageRankingRepository rankingRepository;
@@ -35,7 +35,7 @@ public class StageRankingController {
 
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/stage/{id}")
     public Map<String, Object> getRankingOfStage(@PathVariable("id") String id) {
         rankingRepository.findByStageId(id);
         HashMap<String, Object> response = new HashMap<String, Object>();
@@ -57,5 +57,7 @@ public class StageRankingController {
         }
 
     }
+
+
 
 }

@@ -162,7 +162,7 @@ public class TournamentController {
         }
     }
 
-    @PostMapping(value = "/block/{id}")
+    @PutMapping(value = "/block/{id}")
     public Map<String, Object> blockTournament(@PathVariable("id") String id){
         HashMap<String, Object> response = new HashMap<String, Object>();
         try {
@@ -186,7 +186,7 @@ public class TournamentController {
         }
     }
 
-    @PostMapping(value = "/unblock/{id}")
+    @PutMapping(value = "/unblock/{id}")
     public Map<String, Object> unblockTournament(@PathVariable("id") String id){
         HashMap<String, Object> response = new HashMap<String, Object>();
         try {

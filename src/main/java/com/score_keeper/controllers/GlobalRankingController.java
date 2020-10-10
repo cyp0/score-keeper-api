@@ -17,7 +17,7 @@ import java.util.Map;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "api/global")
+@RequestMapping(value = "api/global-ranking")
 public class GlobalRankingController {
     @Autowired
     StageRankingRepository rankingRepository;
@@ -41,13 +41,13 @@ public class GlobalRankingController {
 
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/tournament/{id}")
     public Map<String, Object> getGlobalRanking(@PathVariable("id") String id){
         HashMap<String, Object> response = new HashMap<String, Object>();
 
         try {
 
-            Optional<GlobalRanking> globalRanking = globalRankingRepository.findById(id);
+            Optional<GlobalRanking> globalRanking = globalRankingRepository.findByTournamentId(id);
 //            List<StageRanking> score = rankingRepository.findAllById(id);
             if (globalRanking.isPresent()) {
                 response.put("message", "Successful load");
