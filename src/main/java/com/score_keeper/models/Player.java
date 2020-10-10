@@ -8,6 +8,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Past;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
 
@@ -15,9 +16,13 @@ import java.time.LocalDate;
 public class Player {
     @Id
     private String id;
+
     @NotEmpty(message = "First Name must not be empty")
+    @Pattern(regexp = "^[\\p{L} .'-]+$" , message = "The name field may only contain letters")
     private String firstName;
+
     @NotEmpty(message = "Last Name must not be empty")
+    @Pattern(regexp = "^[\\p{L} .'-]+$" , message = "The last name field may only contain letters")
     private String lastName;
 
     @NotNull(message = "Birth day must not be empty")
