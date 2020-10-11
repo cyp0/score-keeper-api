@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping(value = "api/users")
 public class UserController {
@@ -32,7 +33,6 @@ public class UserController {
             return response;
         }
     }
-
 
     @GetMapping(value = "/{id}")
     public Map<String, Object> getUserById(@PathVariable("id") String id){
@@ -80,7 +80,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(value = "/block/{id}")
+    @PutMapping(value = "/block/{id}")
     public Map<String, Object> blockUser(@PathVariable("id") String id) {
         HashMap<String, Object> response = new HashMap<String, Object>();
         try {
@@ -105,7 +105,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping(value = "/unblock/{id}")
+    @PutMapping(value = "/unblock/{id}")
     public Map<String, Object> unblockUser(@PathVariable("id") String id) {
         HashMap<String, Object> response = new HashMap<String, Object>();
         try {

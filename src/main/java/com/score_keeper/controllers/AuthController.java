@@ -34,7 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.score_keeper.repository.UserRepository;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {

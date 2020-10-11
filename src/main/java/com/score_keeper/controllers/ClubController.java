@@ -18,6 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/clubs")
+@CrossOrigin(origins = "*")
 public class ClubController {
     @Autowired
     ClubRepository clubRepository;

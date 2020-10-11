@@ -14,6 +14,7 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @RestController
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "api/scores")
 public class ScoreController {
 
