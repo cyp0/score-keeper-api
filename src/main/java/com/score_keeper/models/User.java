@@ -3,7 +3,6 @@ package com.score_keeper.models;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -26,6 +25,8 @@ public class User {
 
   @DBRef
   private Set<Role> roles = new HashSet<>();
+
+  private Boolean isActive;
 
   public User() {
   }
@@ -65,5 +66,13 @@ public class User {
 
   public void setRoles(Set<Role> roles) {
     this.roles = roles;
+  }
+
+  public Boolean getActive() {
+    return isActive;
+  }
+
+  public void setActive(Boolean active) {
+    isActive = active;
   }
 }

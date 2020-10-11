@@ -13,6 +13,6 @@ import java.util.List;
 public interface ScoreService {
     @NotNull List<Score> getAllScoreByStageID(String id);
 //    @NotNull List<PlayerRank> calculateRankings(List<Score> scoreList);
-        public void calculateRankings(StageRanking stageRanking,PlayerRank playerRank ,GlobalRanking globalRanking);
-        public void calculateGlobalRankings(GlobalRanking globalRanking);
+void calculateRankings(StageRanking stageRanking, PlayerRank playerRank, GlobalRanking globalRanking);
+        void calculateGlobalRankings(GlobalRanking globalRanking);
 }

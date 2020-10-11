@@ -7,7 +7,7 @@ public class JwtResponse {
 	private String type = "Bearer";
 	private String id;
 	private String username;
-	private List<String> roles;
+	private final List<String> roles;
 
 	public JwtResponse(String accessToken, String id, String username, List<String> roles) {
 		this.token = accessToken;
