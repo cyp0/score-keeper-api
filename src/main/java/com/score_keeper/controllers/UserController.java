@@ -79,6 +79,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/block/{id}")
     public Map<String, Object> blockUser(@PathVariable("id") String id) {
         HashMap<String, Object> response = new HashMap<String, Object>();
@@ -103,6 +104,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping(value = "/unblock/{id}")
     public Map<String, Object> unblockUser(@PathVariable("id") String id) {
         HashMap<String, Object> response = new HashMap<String, Object>();

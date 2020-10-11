@@ -33,9 +33,5 @@ public class SpringBootSecurityJwtMongodbApplication implements CommandLineRunne
 	@Override
 	public void run(String... args) throws Exception {
 
-
-
-//	tournamentRepository.save(new Tournament("Torneo Juniors 2020" , "Apertura 2020" , 4 , 18, 17));
-
 	}
 }
