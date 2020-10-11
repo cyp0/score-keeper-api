@@ -39,7 +39,7 @@ public class ScoreServiceImpl implements ScoreService {
 
 
     @Override
-    public void calculateRankings(StageRanking stageRanking, PlayerRank playerRank, GlobalRanking globalRanking) {
+    public void calculateRankings(StageRanking stageRanking, GlobalRanking globalRanking) {
         List<PlayerRank> playerRankList = stageRanking.getPlayerRanks();
 
         //Ordena la lista

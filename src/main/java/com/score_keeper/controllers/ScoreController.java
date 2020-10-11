@@ -87,7 +87,7 @@ public class ScoreController {
             if (stageRankingOptional.isPresent()) {
                 PlayerRank playerRank = new PlayerRank(score.getPlayer(), score.getScore());
                 stageRankingOptional.get().getPlayerRanks().add(playerRank);
-                scoreService.calculateRankings(stageRankingOptional.get(), playerRank, globalRankingOptional.get());
+                scoreService.calculateRankings(stageRankingOptional.get(), globalRankingOptional.get());
             } else {
                 //PARA CREAR NUEVO STAGE RANKING
                 List<PlayerRank> playerRankList = new ArrayList<>();
@@ -159,7 +159,7 @@ public class ScoreController {
                 return response;
             }
             if (data.getStrokes().size() != scoreRepository.findById(id).get().getStrokes().size()) {
-                response.put("message", "No se puede introducir mas hoyos de los que ya existen");
+                response.put("message", "You can only introduce 9 holes");
                 response.put("success", false);
                 return response;
             } else {
@@ -171,14 +171,15 @@ public class ScoreController {
                 data.setId(id);
                 scoreRepository.save(data);
                 Optional<StageRanking> stageRanking = rankingRepository.findByStageId(data.getStage().getId());
+                Optional<GlobalRanking> globalRankingOptional = globalRankingRepository.findByTournamentId(data.getStage().getTournament().getId());
+
                 stageRanking.get().getPlayerRanks().forEach(x -> {
                     if (x.getPlayer().getId().equals(player.getId())) {
                         x.setStrikes(data.getScore());
-                        System.out.println("Hola");
                     }
                 });
-
-                response.put("message", "Successful update");
+                scoreService.calculateRankings(stageRanking.get(),globalRankingOptional.get());
+                response.put("message", "Score updated");
                 response.put("success", true);
                 return response;
             }
