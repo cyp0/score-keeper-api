@@ -75,7 +75,7 @@ public class Tournament {
     }
 
     public int getMax_strokes() {
-        return 9;
+        return 10;
     }
 
 //    public void setMax_strokes(int max_strokes) {
