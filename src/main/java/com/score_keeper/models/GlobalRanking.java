@@ -1,6 +1,7 @@
 package com.score_keeper.models;
 
 import com.score_keeper.entity.PlayerRank;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;

@@ -46,25 +46,17 @@ public class ScoreServiceImpl implements ScoreService {
         Collections.sort(playerRankList);
         //Para Calcular puntos
         playerRankList.forEach(x -> x.setPoints(0));
+        int points = 20;
         for (int i = 0; i < playerRankList.size(); i++) {
-            playerRankList.get(i).setPoints(10 - i);
+            if(i > 10){
+                playerRankList.get(i).setPoints(0);
+            }else {
+                playerRankList.get(i).setPoints(points);
+                points -= 2;
+            }
         }
         stageRanking.setId(stageRanking.getId());
         rankingRepository.save(stageRanking);
-
-//        System.out.println(playerRank.getPoints());
-//        globalRanking.getRankList().add(playerRank);
-
-//        globalRanking.getRankList().add(playerRank);
-
-
-//        if(!globalRanking.getRankList().contains(playerRank)){
-//            globalRanking.getRankList().add(playerRank);
-//        }else {
-//            int index = globalRanking.getRankList().indexOf(playerRank);
-//            globalRanking.getRankList().get(index).setPoints(globalRanking.getRankList().get(index).getPoints() + playerRank.getPoints());
-//        }
-
 
         calculateGlobalRankings(globalRanking);
     }
@@ -99,6 +91,9 @@ public class ScoreServiceImpl implements ScoreService {
                 });
             }
         }
+
+        globalRankings.sort((o1, o2) -> Integer.compare(o2.getPoints(), o1.getPoints()));
+
         globalRanking.setId(globalRanking.getId());
         globalRanking.setRankList(globalRankings);
         globalRankingRepository.save(globalRanking);

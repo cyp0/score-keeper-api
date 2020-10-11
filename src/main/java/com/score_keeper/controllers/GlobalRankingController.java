@@ -48,13 +48,12 @@ public class GlobalRankingController {
             Optional<GlobalRanking> globalRanking = globalRankingRepository.findByTournamentId(id);
 //            List<StageRanking> score = rankingRepository.findAllById(id);
             if (globalRanking.isPresent()) {
-                response.put("message", "Successful load");
-                response.put("data", globalRanking);
+                response.put("message", "Tournament found");
+                response.put("data", globalRanking.get());
                 response.put("success", true);
                 return response;
             } else {
-                response.put("message", "Not found data");
-                response.put("data", null);
+                response.put("message", "Tournament doesn't exists");
                 response.put("success", false);
                 return response;
             }
