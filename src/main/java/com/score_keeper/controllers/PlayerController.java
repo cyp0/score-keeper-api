@@ -49,7 +49,7 @@ public class PlayerController {
 
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = {"/", ""})
     public Map<String, Object> postPlayer(@Valid @RequestBody Player player) {
         HashMap<String, Object> response = new HashMap<>();
@@ -127,7 +127,7 @@ public class PlayerController {
 //    }
 
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}")
     public Map<String, Object> updatePlayer(@PathVariable("id") String id, @Valid @RequestBody Player player) {
         HashMap<String, Object> response = new HashMap<String, Object>();

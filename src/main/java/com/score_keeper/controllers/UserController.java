@@ -4,6 +4,7 @@ import com.score_keeper.models.Category;
 import com.score_keeper.models.User;
 import com.score_keeper.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -54,6 +55,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}")
     public Map<String, Object> updateUser(@PathVariable("id") String id,@Valid @RequestBody User user) {
         HashMap<String, Object> response = new HashMap<String, Object>();
@@ -125,6 +127,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public Map<String, Object> deleteCategory(@PathVariable("id") String id){
         HashMap<String, Object> response = new HashMap<String, Object>();

@@ -5,6 +5,7 @@ import com.score_keeper.models.Club;
 import com.score_keeper.models.Player;
 import com.score_keeper.repository.CategoryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -33,6 +34,7 @@ public class CategoryController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = {"/", ""})
     public Map<String, Object> createCategory(@Valid @RequestBody Category category) {
         HashMap<String, Object> response = new HashMap<>();
@@ -69,6 +71,7 @@ public class CategoryController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}")
     public Map<String, Object> updateCategory(@PathVariable("id") String id,@Valid @RequestBody Category category) {
         HashMap<String, Object> response = new HashMap<String, Object>();
@@ -92,6 +95,7 @@ public class CategoryController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public Map<String, Object> deleteCategory(@PathVariable("id") String id){
         HashMap<String, Object> response = new HashMap<String, Object>();

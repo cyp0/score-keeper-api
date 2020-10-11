@@ -5,6 +5,7 @@ import com.score_keeper.repository.ClubRepository;
 import com.score_keeper.repository.StageRepository;
 import com.score_keeper.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -112,6 +113,7 @@ public class StageController {
 //        }
 //    }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}")
     public Map<String, Object> updateStage(@PathVariable("id") String id, @Valid @RequestBody Stage stage) {
         HashMap<String, Object> response = new HashMap<String, Object>();
@@ -155,6 +157,7 @@ public class StageController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public Map<String, Object> deleteStage(@PathVariable("id") String id) {
         HashMap<String, Object> response = new HashMap<String, Object>();
@@ -181,6 +184,7 @@ public class StageController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/block/{id}")
     public Map<String, Object> blockStage(@PathVariable("id") String id){
         HashMap<String, Object> response = new HashMap<String, Object>();
@@ -205,6 +209,7 @@ public class StageController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/unblock/{id}")
     public Map<String, Object> unblockStage(@PathVariable("id") String id){
         HashMap<String, Object> response = new HashMap<String, Object>();

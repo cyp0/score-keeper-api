@@ -7,6 +7,7 @@ import com.score_keeper.models.Player;
 import com.score_keeper.repository.ClubRepository;
 import com.score_keeper.repository.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -38,6 +39,7 @@ public class ClubController {
 
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value =  {"/", ""})
     public Map<String , Object> createClub(@Valid @RequestBody Club club){
         HashMap<String, Object> response = new HashMap<>();
@@ -80,6 +82,7 @@ public class ClubController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}")
     public Map<String, Object> updateClub(@PathVariable("id") String id,@Valid @RequestBody Club club) {
         HashMap<String, Object> response = new HashMap<String, Object>();
@@ -103,6 +106,7 @@ public class ClubController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public Map<String, Object> deleteClub(@PathVariable("id") String id){
         HashMap<String, Object> response = new HashMap<String, Object>();

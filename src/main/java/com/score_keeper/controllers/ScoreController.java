@@ -6,6 +6,7 @@ import com.score_keeper.models.*;
 import com.score_keeper.repository.*;
 import com.score_keeper.service.ScoreServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -44,9 +45,9 @@ public class ScoreController {
         }
 
     }
-
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     @PostMapping(value = {"/", ""})
-    public Map<String, Object> createClub(@Valid @RequestBody Score score) {
+    public Map<String, Object> createScore(@Valid @RequestBody Score score) {
         HashMap<String, Object> response = new HashMap<>();
         try {
             Stage stage = stageRepository.findById(score.getStage().getId()).get();
@@ -113,14 +114,12 @@ public class ScoreController {
     }
 
     @GetMapping(value = "/stage/{stage}/player/{player}")
-    public Map<String, Object> data(@PathVariable("stage") String stageID , @PathVariable("player") String playerID) {
+    public Map<String, Object> getScoreByStageAndPlayer(@PathVariable("stage") String stageID , @PathVariable("player") String playerID) {
 
         HashMap<String, Object> response = new HashMap<String, Object>();
 
         try {
-
             Optional<Score> score = scoreRepository.findByStageId_AndPlayerId(stageID, playerID);
-
             if (score.isPresent()) {
                 response.put("message", "Successful load");
                 response.put("data", score);
@@ -140,8 +139,9 @@ public class ScoreController {
         }
     }
 
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public Map<String, Object> update(@PathVariable("id") String id, @RequestBody Score data) {
+    public Map<String, Object> updateScore(@PathVariable("id") String id, @RequestBody Score data) {
 
         HashMap<String, Object> response = new HashMap<String, Object>();
 
@@ -169,11 +169,6 @@ public class ScoreController {
                 data.setStage(stage);
                 data.setId(id);
                 scoreRepository.save(data);
-//                scoreService.calculateRankings(scoreList);
-//                StageRanking stageRanking = new StageRanking(scoreService.calculateRankings(scoreList));
-//                stageRanking.setTournament(data.getStage().getTournament());
-//                stageRanking.setStage(data.getStage());
-//                rankingRepository.save(stageRanking);
                 Optional<StageRanking> stageRanking = rankingRepository.findByStageId(data.getStage().getId());
                 stageRanking.get().getPlayerRanks().forEach(x -> {
                     if (x.getPlayer().getId().equals(player.getId())) {
@@ -181,9 +176,6 @@ public class ScoreController {
                         System.out.println("Hola");
                     }
                 });
-                //AGREGARLE EL GLOBAL RANKING REPOSITORY O VER OTRA SOLUCION 8/10/2020
-//                scoreService.calculateRankings(stageRanking.get());
-
 
                 response.put("message", "Successful update");
                 response.put("success", true);
@@ -197,6 +189,7 @@ public class ScoreController {
 
     }
 
+    @PreAuthorize("hasRole('MODERATOR') or hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public Map<String, Object> deleteScore(@PathVariable("id") String id) {
         HashMap<String, Object> response = new HashMap<String, Object>();

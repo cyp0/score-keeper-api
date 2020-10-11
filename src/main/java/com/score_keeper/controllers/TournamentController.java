@@ -6,6 +6,7 @@ import com.score_keeper.repository.GlobalRankingRepository;
 import com.score_keeper.repository.StageRepository;
 import com.score_keeper.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -35,6 +36,7 @@ public class TournamentController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping(value = {"/", ""})
     public Map<String, Object> createTournament(@Valid @RequestBody Tournament tournament) {
         HashMap<String, Object> response = new HashMap<>();
@@ -113,6 +115,7 @@ public class TournamentController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/{id}")
     public Map<String, Object> updateTournament(@PathVariable("id") String id, @Valid @RequestBody Tournament tournament) {
         HashMap<String, Object> response = new HashMap<String, Object>();
@@ -141,6 +144,7 @@ public class TournamentController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping(value = "/{id}")
     public Map<String, Object> deleteTournament(@PathVariable("id") String id) {
         HashMap<String, Object> response = new HashMap<String, Object>();
@@ -162,6 +166,7 @@ public class TournamentController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/block/{id}")
     public Map<String, Object> blockTournament(@PathVariable("id") String id){
         HashMap<String, Object> response = new HashMap<String, Object>();
@@ -186,6 +191,7 @@ public class TournamentController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping(value = "/unblock/{id}")
     public Map<String, Object> unblockTournament(@PathVariable("id") String id){
         HashMap<String, Object> response = new HashMap<String, Object>();
