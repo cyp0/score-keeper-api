@@ -42,11 +42,7 @@ public class TournamentController {
         HashMap<String, Object> response = new HashMap<>();
         try {
             Optional<Tournament> tournamentOptional = tournamentRepository.findByName(tournament.getName());
-            if (tournamentOptional.isPresent()) {
-                response.put("message", tournament.getName() + " already exists");
-                response.put("success", false);
-                return response;
-            } else {
+
                 tournamentRepository.save(tournament);
                 //Create new global ranking
 
@@ -63,7 +59,7 @@ public class TournamentController {
                 response.put("message", "Successful");
                 response.put("success", true);
                 return response;
-            }
+
         } catch (Exception e) {
             response.put("message", e.getMessage());
             response.put("success", false);
@@ -132,7 +128,7 @@ public class TournamentController {
             } else {
                 tournament.setId(id);
                 tournamentRepository.save(tournament);
-                response.put("message", "Successfully update");
+                response.put("message", "Successfully updated");
                 response.put("success", true);
             }
             return response;
